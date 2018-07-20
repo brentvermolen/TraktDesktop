@@ -63,7 +63,10 @@ namespace TraktDesktop
                 string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam;
                 string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
 
-                bestand.MoveTo(fullName);
+                if (File.Exists(fullName) == false)
+                {
+                    bestand.MoveTo(fullName);
+                }
             }
         }
 
@@ -87,8 +90,11 @@ namespace TraktDesktop
             {
                 worker.ReportProgress(0, "Gegevens inladen");
 
-                AfleveringenAdpater = new dtsSeriesAfleveringenTableAdapters.AfleveringsTableAdapter();
-                AfleveringenAdpater.Fill(dtsSeriesAfleveringen1.Afleverings);
+                if (AfleveringenAdpater == null)
+                {
+                    AfleveringenAdpater = new dtsSeriesAfleveringenTableAdapters.AfleveringsTableAdapter();
+                    AfleveringenAdpater.Fill(dtsSeriesAfleveringen1.Afleverings);
+                }
 
                 worker.ReportProgress(0, "Serie kiezen");
 
@@ -101,8 +107,9 @@ namespace TraktDesktop
 
                 var afleveringen = AfleveringenAdpater.GetData().Where(a => a.SerieID == serieId);
 
-                string regex = "[sS]{1}([0-9]{1,2})[eExX]{1}([0-9]{1,2})";
+                string regex = "[sS]{0,1}([0-9]{1,2})[eExX]{1}([0-9]{1,2})";
                 string regex2 = "([0-9]{1})([0-9]{2})";
+                string regex3 = "[sS]{1}([0-9]{1,2})[eExX]{1}[ ][(]([0-9]{1,2})[)]";
 
                 worker.ReportProgress(0, "Bestanden wijzigen");
 
@@ -117,6 +124,12 @@ namespace TraktDesktop
                     else if (Regex.IsMatch(bestand.Name, regex2))
                     {
                         Match match = Regex.Match(bestand.Name, regex2);
+
+                        MoveBestand(afleveringen, bestand, match);
+                    }
+                    else if(Regex.IsMatch(bestand.Name, regex3))
+                    {
+                        Match match = Regex.Match(bestand.Name, regex3);
 
                         MoveBestand(afleveringen, bestand, match);
                     }
