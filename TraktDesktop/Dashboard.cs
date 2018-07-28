@@ -51,25 +51,6 @@ namespace TraktDesktop
             //SeriesAdapter.Fill(dtsSeriesAfleveringen1.Series);
         }
 
-        private void MoveBestand(EnumerableRowCollection<dtsSeriesAfleveringen.AfleveringsRow> afleveringen, FileInfo bestand, Match match)
-        {
-            int seizoen = int.Parse(match.Groups[1].Value);
-            int afl = int.Parse(match.Groups[2].Value);
-
-            var aflevering = afleveringen.FirstOrDefault(a => a.Seizoen == seizoen && a.Nummer == afl);
-
-            if (aflevering != null)
-            {
-                string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam;
-                string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
-
-                if (File.Exists(fullName) == false)
-                {
-                    bestand.MoveTo(fullName);
-                }
-            }
-        }
-
         private void btnWijzigNamen_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -107,11 +88,36 @@ namespace TraktDesktop
 
                 var afleveringen = AfleveringenAdpater.GetData().Where(a => a.SerieID == serieId);
 
+                worker.ReportProgress(0, "Bestanden wijzigen");
+
+                SearchInFolder(dirFolder, serieId, afleveringen);
+            });
+
+            worker.ProgressChanged += new ProgressChangedEventHandler((obj, p) =>
+            {
+                lblLoading.Text = p.UserState.ToString();
+            });
+
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((obj, r) =>
+            {
+                grpLoading.Visible = false;
+            });
+
+            worker.RunWorkerAsync();
+        }
+
+        private void SearchInFolder(DirectoryInfo dirFolder, int serieId, EnumerableRowCollection<dtsSeriesAfleveringen.AfleveringsRow> afleveringen)
+        {
+            foreach(var folder in dirFolder.GetDirectories())
+            {
+                SearchInFolder(folder, serieId, afleveringen);
+            }
+
+            foreach(var file in dirFolder.GetFiles())
+            {
                 string regex = "[sS]{0,1}([0-9]{1,2})[eExX]{1}([0-9]{1,2})";
                 string regex2 = "([0-9]{1})([0-9]{2})";
                 string regex3 = "[sS]{1}([0-9]{1,2})[eExX]{1}[ ][(]([0-9]{1,2})[)]";
-
-                worker.ReportProgress(0, "Bestanden wijzigen");
 
                 foreach (FileInfo bestand in dirFolder.GetFiles())
                 {
@@ -127,26 +133,33 @@ namespace TraktDesktop
 
                         MoveBestand(afleveringen, bestand, match);
                     }
-                    else if(Regex.IsMatch(bestand.Name, regex3))
+                    else if (Regex.IsMatch(bestand.Name, regex3))
                     {
                         Match match = Regex.Match(bestand.Name, regex3);
 
                         MoveBestand(afleveringen, bestand, match);
                     }
                 }
-            });
+            }
+        }
 
-            worker.ProgressChanged += new ProgressChangedEventHandler((obj, p) =>
+        private void MoveBestand(EnumerableRowCollection<dtsSeriesAfleveringen.AfleveringsRow> afleveringen, FileInfo bestand, Match match)
+        {
+            int seizoen = int.Parse(match.Groups[1].Value);
+            int afl = int.Parse(match.Groups[2].Value);
+
+            var aflevering = afleveringen.FirstOrDefault(a => a.Seizoen == seizoen && a.Nummer == afl);
+
+            if (aflevering != null)
             {
-                lblLoading.Text = p.UserState.ToString();
-            });
+                string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam;
+                string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
 
-            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((obj, r) =>
-            {
-                grpLoading.Visible = false;
-            });
-
-            worker.RunWorkerAsync();
+                if (File.Exists(fullName) == false)
+                {
+                    bestand.MoveTo(fullName);
+                }
+            }
         }
     }
 }
