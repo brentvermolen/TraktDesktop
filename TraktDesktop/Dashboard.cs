@@ -396,5 +396,16 @@ namespace TraktDesktop
         {
 
         }
+
+        private void btnTags_Click(object sender, EventArgs e)
+        {
+            frmTags frm = new frmTags();
+            frm.ShowDialog();
+        }
+
+        private void btnExporteren_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

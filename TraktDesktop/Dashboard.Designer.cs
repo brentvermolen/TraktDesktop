@@ -34,8 +34,7 @@
             this.btnBekijkArchief = new System.Windows.Forms.Button();
             this.btnWijzigNamen = new System.Windows.Forms.Button();
             this.btnExporteren = new System.Windows.Forms.Button();
-            this.btnSeries = new System.Windows.Forms.Button();
-            this.btnFilms = new System.Windows.Forms.Button();
+            this.btnTags = new System.Windows.Forms.Button();
             this.btnArchiefToevoegen = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnAfleveringenToevoegen = new System.Windows.Forms.Button();
@@ -44,6 +43,8 @@
             this.btnFilmsToevoegen = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnOmzettenMKV = new System.Windows.Forms.Button();
+            this.btnCollectieUpdaten = new System.Windows.Forms.Button();
             this.btnAfleveringToevoegen = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.grpLoading = new System.Windows.Forms.GroupBox();
@@ -51,8 +52,6 @@
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.dtsFilmTags1 = new TraktDesktop.dtsFilmTags();
-            this.btnOmzettenMKV = new System.Windows.Forms.Button();
-            this.btnCollectieUpdaten = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -112,26 +111,18 @@
             this.btnExporteren.TabIndex = 13;
             this.btnExporteren.Text = "Exporteren + Uploaden";
             this.btnExporteren.UseVisualStyleBackColor = true;
+            this.btnExporteren.Click += new System.EventHandler(this.btnExporteren_Click);
             // 
-            // btnSeries
+            // btnTags
             // 
-            this.btnSeries.Location = new System.Drawing.Point(26, 68);
-            this.btnSeries.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSeries.Name = "btnSeries";
-            this.btnSeries.Size = new System.Drawing.Size(214, 30);
-            this.btnSeries.TabIndex = 10;
-            this.btnSeries.Text = "Alle Series";
-            this.btnSeries.UseVisualStyleBackColor = true;
-            // 
-            // btnFilms
-            // 
-            this.btnFilms.Location = new System.Drawing.Point(26, 21);
-            this.btnFilms.Margin = new System.Windows.Forms.Padding(2);
-            this.btnFilms.Name = "btnFilms";
-            this.btnFilms.Size = new System.Drawing.Size(214, 30);
-            this.btnFilms.TabIndex = 11;
-            this.btnFilms.Text = "Alle Films";
-            this.btnFilms.UseVisualStyleBackColor = true;
+            this.btnTags.Location = new System.Drawing.Point(26, 21);
+            this.btnTags.Margin = new System.Windows.Forms.Padding(2);
+            this.btnTags.Name = "btnTags";
+            this.btnTags.Size = new System.Drawing.Size(214, 30);
+            this.btnTags.TabIndex = 11;
+            this.btnTags.Text = "Tags";
+            this.btnTags.UseVisualStyleBackColor = true;
+            this.btnTags.Click += new System.EventHandler(this.btnTags_Click);
             // 
             // btnArchiefToevoegen
             // 
@@ -147,8 +138,7 @@
             // 
             this.groupBox3.Controls.Add(this.btnWijzigNamen);
             this.groupBox3.Controls.Add(this.btnExporteren);
-            this.groupBox3.Controls.Add(this.btnSeries);
-            this.groupBox3.Controls.Add(this.btnFilms);
+            this.groupBox3.Controls.Add(this.btnTags);
             this.groupBox3.Location = new System.Drawing.Point(274, 225);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
@@ -227,6 +217,26 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Films";
             // 
+            // btnOmzettenMKV
+            // 
+            this.btnOmzettenMKV.Location = new System.Drawing.Point(22, 117);
+            this.btnOmzettenMKV.Name = "btnOmzettenMKV";
+            this.btnOmzettenMKV.Size = new System.Drawing.Size(214, 30);
+            this.btnOmzettenMKV.TabIndex = 10;
+            this.btnOmzettenMKV.Text = "Omzetten naar MKV";
+            this.btnOmzettenMKV.UseVisualStyleBackColor = true;
+            this.btnOmzettenMKV.Click += new System.EventHandler(this.btnOmzettenMKV_Click);
+            // 
+            // btnCollectieUpdaten
+            // 
+            this.btnCollectieUpdaten.Location = new System.Drawing.Point(22, 167);
+            this.btnCollectieUpdaten.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCollectieUpdaten.Name = "btnCollectieUpdaten";
+            this.btnCollectieUpdaten.Size = new System.Drawing.Size(214, 30);
+            this.btnCollectieUpdaten.TabIndex = 3;
+            this.btnCollectieUpdaten.Text = "Collectie Updaten";
+            this.btnCollectieUpdaten.UseVisualStyleBackColor = true;
+            // 
             // btnAfleveringToevoegen
             // 
             this.btnAfleveringToevoegen.Location = new System.Drawing.Point(26, 167);
@@ -283,6 +293,7 @@
             // 
             // button1
             // 
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(590, 132);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(144, 23);
@@ -296,31 +307,11 @@
             this.dtsFilmTags1.DataSetName = "dtsFilmTags";
             this.dtsFilmTags1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // btnOmzettenMKV
-            // 
-            this.btnOmzettenMKV.Location = new System.Drawing.Point(22, 117);
-            this.btnOmzettenMKV.Name = "btnOmzettenMKV";
-            this.btnOmzettenMKV.Size = new System.Drawing.Size(214, 30);
-            this.btnOmzettenMKV.TabIndex = 10;
-            this.btnOmzettenMKV.Text = "Omzetten Naar MKV";
-            this.btnOmzettenMKV.UseVisualStyleBackColor = true;
-            this.btnOmzettenMKV.Click += new System.EventHandler(this.btnOmzettenMKV_Click);
-            // 
-            // btnCollectieUpdaten
-            // 
-            this.btnCollectieUpdaten.Location = new System.Drawing.Point(22, 167);
-            this.btnCollectieUpdaten.Margin = new System.Windows.Forms.Padding(2);
-            this.btnCollectieUpdaten.Name = "btnCollectieUpdaten";
-            this.btnCollectieUpdaten.Size = new System.Drawing.Size(214, 30);
-            this.btnCollectieUpdaten.TabIndex = 3;
-            this.btnCollectieUpdaten.Text = "Collectie Updaten";
-            this.btnCollectieUpdaten.UseVisualStyleBackColor = true;
-            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(772, 442);
+            this.ClientSize = new System.Drawing.Size(543, 449);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox4);
@@ -349,8 +340,7 @@
         private System.Windows.Forms.Button btnBekijkArchief;
         private System.Windows.Forms.Button btnWijzigNamen;
         private System.Windows.Forms.Button btnExporteren;
-        private System.Windows.Forms.Button btnSeries;
-        private System.Windows.Forms.Button btnFilms;
+        private System.Windows.Forms.Button btnTags;
         private System.Windows.Forms.Button btnArchiefToevoegen;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnAfleveringenToevoegen;

@@ -64,6 +64,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dtsSeriesAfleveringen.xsd</DependentUpon>
     </Compile>
+    <Compile Include="frmTags.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTags.Designer.cs">
+      <DependentUpon>frmTags.cs</DependentUpon>
+    </Compile>
     <Compile Include="KiesSerie.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +80,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTags.resx">
+      <DependentUpon>frmTags.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KiesSerie.resx">
       <DependentUpon>KiesSerie.cs</DependentUpon>
