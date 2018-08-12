@@ -40,17 +40,19 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btnAfleveringenToevoegen = new System.Windows.Forms.Button();
             this.btnSeriesToevoegen = new System.Windows.Forms.Button();
-            this.btnFilmUpdaten = new System.Windows.Forms.Button();
             this.btnFilmToevoegen = new System.Windows.Forms.Button();
             this.btnFilmsToevoegen = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.btnCollectieUpdaten = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnAfleveringToevoegen = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.grpLoading = new System.Windows.Forms.GroupBox();
             this.lblLoading = new System.Windows.Forms.Label();
             this.picLoading = new System.Windows.Forms.PictureBox();
+            this.button1 = new System.Windows.Forms.Button();
+            this.dtsFilmTags1 = new TraktDesktop.dtsFilmTags();
+            this.btnOmzettenMKV = new System.Windows.Forms.Button();
+            this.btnCollectieUpdaten = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -58,6 +60,7 @@
             this.groupBox2.SuspendLayout();
             this.grpLoading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).BeginInit();
             this.SuspendLayout();
             // 
             // dtsSeriesAfleveringen1
@@ -175,16 +178,6 @@
             this.btnSeriesToevoegen.Text = "Series Toevoegen";
             this.btnSeriesToevoegen.UseVisualStyleBackColor = true;
             // 
-            // btnFilmUpdaten
-            // 
-            this.btnFilmUpdaten.Location = new System.Drawing.Point(22, 117);
-            this.btnFilmUpdaten.Margin = new System.Windows.Forms.Padding(2);
-            this.btnFilmUpdaten.Name = "btnFilmUpdaten";
-            this.btnFilmUpdaten.Size = new System.Drawing.Size(214, 30);
-            this.btnFilmUpdaten.TabIndex = 2;
-            this.btnFilmUpdaten.Text = "Film Data Updaten";
-            this.btnFilmUpdaten.UseVisualStyleBackColor = true;
-            // 
             // btnFilmToevoegen
             // 
             this.btnFilmToevoegen.Location = new System.Drawing.Point(22, 65);
@@ -219,20 +212,10 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Archief";
             // 
-            // btnCollectieUpdaten
-            // 
-            this.btnCollectieUpdaten.Location = new System.Drawing.Point(22, 167);
-            this.btnCollectieUpdaten.Margin = new System.Windows.Forms.Padding(2);
-            this.btnCollectieUpdaten.Name = "btnCollectieUpdaten";
-            this.btnCollectieUpdaten.Size = new System.Drawing.Size(214, 30);
-            this.btnCollectieUpdaten.TabIndex = 3;
-            this.btnCollectieUpdaten.Text = "Collectie Updaten";
-            this.btnCollectieUpdaten.UseVisualStyleBackColor = true;
-            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnOmzettenMKV);
             this.groupBox1.Controls.Add(this.btnCollectieUpdaten);
-            this.groupBox1.Controls.Add(this.btnFilmUpdaten);
             this.groupBox1.Controls.Add(this.btnFilmToevoegen);
             this.groupBox1.Controls.Add(this.btnFilmsToevoegen);
             this.groupBox1.Location = new System.Drawing.Point(11, 11);
@@ -298,11 +281,47 @@
             this.picLoading.TabIndex = 11;
             this.picLoading.TabStop = false;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(590, 132);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(144, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "Effe alle tags laden";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // dtsFilmTags1
+            // 
+            this.dtsFilmTags1.DataSetName = "dtsFilmTags";
+            this.dtsFilmTags1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // btnOmzettenMKV
+            // 
+            this.btnOmzettenMKV.Location = new System.Drawing.Point(22, 117);
+            this.btnOmzettenMKV.Name = "btnOmzettenMKV";
+            this.btnOmzettenMKV.Size = new System.Drawing.Size(214, 30);
+            this.btnOmzettenMKV.TabIndex = 10;
+            this.btnOmzettenMKV.Text = "Omzetten Naar MKV";
+            this.btnOmzettenMKV.UseVisualStyleBackColor = true;
+            this.btnOmzettenMKV.Click += new System.EventHandler(this.btnOmzettenMKV_Click);
+            // 
+            // btnCollectieUpdaten
+            // 
+            this.btnCollectieUpdaten.Location = new System.Drawing.Point(22, 167);
+            this.btnCollectieUpdaten.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCollectieUpdaten.Name = "btnCollectieUpdaten";
+            this.btnCollectieUpdaten.Size = new System.Drawing.Size(214, 30);
+            this.btnCollectieUpdaten.TabIndex = 3;
+            this.btnCollectieUpdaten.Text = "Collectie Updaten";
+            this.btnCollectieUpdaten.UseVisualStyleBackColor = true;
+            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(542, 442);
+            this.ClientSize = new System.Drawing.Size(772, 442);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox1);
@@ -310,7 +329,6 @@
             this.Controls.Add(this.grpLoading);
             this.Name = "Dashboard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.Dashboard_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).EndInit();
             this.groupBox3.ResumeLayout(false);
@@ -319,6 +337,7 @@
             this.groupBox2.ResumeLayout(false);
             this.grpLoading.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -336,17 +355,19 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnAfleveringenToevoegen;
         private System.Windows.Forms.Button btnSeriesToevoegen;
-        private System.Windows.Forms.Button btnFilmUpdaten;
         private System.Windows.Forms.Button btnFilmToevoegen;
         private System.Windows.Forms.Button btnFilmsToevoegen;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button btnCollectieUpdaten;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnAfleveringToevoegen;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox grpLoading;
         private System.Windows.Forms.Label lblLoading;
         private System.Windows.Forms.PictureBox picLoading;
+        private System.Windows.Forms.Button button1;
+        private dtsFilmTags dtsFilmTags1;
+        private System.Windows.Forms.Button btnOmzettenMKV;
+        private System.Windows.Forms.Button btnCollectieUpdaten;
     }
 }
 

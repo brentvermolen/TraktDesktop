@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace TraktDesktop
 {
@@ -37,6 +40,10 @@ namespace TraktDesktop
          */
         private dtsSeriesAfleveringenTableAdapters.SeriesTableAdapter SeriesAdapter;
         private dtsSeriesAfleveringenTableAdapters.AfleveringsTableAdapter AfleveringenAdpater;
+
+        private dtsFilmTagsTableAdapters.FilmsTableAdapter FilmsAdapter;
+        private dtsFilmTagsTableAdapters.FilmTagsTableAdapter FilmTagsAdapter;
+        private dtsFilmTagsTableAdapters.TagsTableAdapter TagsAdapter;
 
         public Dashboard()
         {
@@ -108,12 +115,12 @@ namespace TraktDesktop
 
         private void SearchInFolder(DirectoryInfo dirFolder, int serieId, EnumerableRowCollection<dtsSeriesAfleveringen.AfleveringsRow> afleveringen)
         {
-            foreach(var folder in dirFolder.GetDirectories())
+            foreach (var folder in dirFolder.GetDirectories())
             {
                 SearchInFolder(folder, serieId, afleveringen);
             }
 
-            foreach(var file in dirFolder.GetFiles())
+            foreach (var file in dirFolder.GetFiles())
             {
                 string regex = "[sS]{0,1}([0-9]{1,2})[eExX]{1}([0-9]{1,2})";
                 string regex2 = "([0-9]{1})([0-9]{2})";
@@ -160,6 +167,234 @@ namespace TraktDesktop
                     bestand.MoveTo(fullName);
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            BackgroundWorker worker = new BackgroundWorker();
+
+            grpLoading.Visible = true;
+
+            worker.WorkerReportsProgress = true;
+            worker.DoWork += new DoWorkEventHandler((obj, d) =>
+            {
+                worker.ReportProgress(0, "Films inladen");
+
+                if (FilmsAdapter == null)
+                {
+                    FilmsAdapter = new dtsFilmTagsTableAdapters.FilmsTableAdapter();
+                    FilmsAdapter.Fill(dtsFilmTags1.Films);
+                }
+
+                worker.ReportProgress(0, "Tags inladen");
+
+                if (TagsAdapter == null)
+                {
+                    TagsAdapter = new dtsFilmTagsTableAdapters.TagsTableAdapter();
+                    TagsAdapter.Fill(dtsFilmTags1.Tags);
+                }
+
+                worker.ReportProgress(0, "Film Tags inladen");
+
+                if (FilmTagsAdapter == null)
+                {
+                    FilmTagsAdapter = new dtsFilmTagsTableAdapters.FilmTagsTableAdapter();
+                    FilmTagsAdapter.Fill(dtsFilmTags1.FilmTags);
+                }
+
+                foreach (var film in FilmsAdapter.GetData().OrderBy(f => f.Naam))
+                {
+                    worker.ReportProgress(0, film.Naam);
+
+                    var filmTagList = FilmTagsAdapter.GetData().Where(t => t.Film_ID == film.ID);
+
+                    using (WebClient client = new WebClient())
+                    {
+                        client.Encoding = Encoding.UTF8;
+
+                        var success = false;
+
+                        do
+                        {
+                            try
+                            {
+                                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE", film.ID, "2719fd17f1c54d219dedc3aa9309a1e2"));
+                                var jobject = JObject.Parse(json);
+
+                                success = true;
+
+                                foreach (var genre in jobject.SelectToken("genres"))
+                                {
+                                    var naam = genre.SelectToken("name").ToString();
+                                    worker.ReportProgress(0, film.Naam + " - " + naam);
+
+                                    var tag = TagsAdapter.GetData().FirstOrDefault(t => t.Naam.Equals(naam));
+                                    if (tag == null)
+                                    {
+                                        var maxId = TagsAdapter.GetData().Max(t => t.ID) + 1;
+                                        dtsFilmTags.TagsRow tagsRow = dtsFilmTags1.Tags.NewTagsRow();
+                                        tagsRow.ID = maxId;
+                                        tagsRow.Naam = naam;
+
+                                        tag = tagsRow;
+                                        dtsFilmTags1.Tags.Rows.Add(tagsRow);
+                                    }
+
+                                    if (filmTagList.FirstOrDefault(t => t.Tag_ID == tag.ID) == null)
+                                    {
+                                        dtsFilmTags.FilmTagsRow filmTagsRow = dtsFilmTags1.FilmTags.NewFilmTagsRow();
+                                        filmTagsRow.Film_ID = film.ID;
+                                        filmTagsRow.Tag_ID = tag.ID;
+
+                                        dtsFilmTags1.FilmTags.Rows.Add(filmTagsRow);
+                                    }
+                                }
+
+                                worker.ReportProgress(0, film.Naam + " opslaan");
+
+                                TagsAdapter.Update(dtsFilmTags1);
+                                FilmTagsAdapter.Update(dtsFilmTags1);
+                            }
+                            catch (Exception)
+                            {
+                                success = false;
+                                System.Threading.Thread.Sleep(1000);
+                            }
+                        } while (success == false);
+                    }
+                }
+            });
+
+            worker.ProgressChanged += new ProgressChangedEventHandler((obj, p) =>
+            {
+                lblLoading.Text = p.UserState.ToString();
+            });
+
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((obj, r) =>
+            {
+                grpLoading.Visible = false;
+            });
+
+            worker.RunWorkerAsync();
+        }
+
+        private void btnOmzettenMKV_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                BackgroundWorker worker = new BackgroundWorker();
+
+                grpLoading.Visible = true;
+                worker.WorkerReportsProgress = true;
+                worker.DoWork += new DoWorkEventHandler((obj, d) =>
+                {
+                    leesFolder(new DirectoryInfo(fbd.SelectedPath), worker);
+                });
+
+                worker.ProgressChanged += new ProgressChangedEventHandler((obj, p) =>
+                {
+                    lblLoading.Text = p.UserState.ToString();
+                });
+
+                worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((obj, r) =>
+                {
+                    grpLoading.Visible = false;
+                });
+
+                worker.RunWorkerAsync();
+            }
+        }
+
+        private void leesFolder(DirectoryInfo folder, BackgroundWorker worker)
+        {
+            FileInfo ondertitelFile = folder.GetFiles().Where(f => f.Extension.ToLower().Equals(".srt")).FirstOrDefault();
+            if (folder.GetFiles().Length == 2 && folder.GetDirectories().Length == 0 && ondertitelFile != null)
+            {
+                FileInfo movieFile = folder.GetFiles().Where(f => !f.Extension.ToLower().Equals(".srt")).FirstOrDefault();
+                worker.ReportProgress(0, movieFile.Name);
+
+                if (movieFile != null)
+                {
+                    try
+                    {
+                        string nieuwBestand = movieFile.DirectoryName + "//" + movieFile.Name.Replace(movieFile.Extension, "") + ".mkv";
+
+                        if (movieFile.Extension.Equals(".mkv"))
+                        {
+                            movieFile.MoveTo(movieFile.DirectoryName + "//" + movieFile.Name.Replace(movieFile.Extension, "") + " - kopie" + movieFile.Extension);
+                        }
+
+                        string oudBestand = movieFile.FullName;
+
+                        string ondertitels = ondertitelFile.FullName;
+
+                        string command = string.Format("-o \"{0}\" \"(\" \"{1}\" \")\" \"-S\" \"(\" \"{2}\" \")\"", nieuwBestand, ondertitels, oudBestand);
+                        runCmd(command);
+                    }
+                    catch (Exception)
+                    {
+                        using (StreamWriter writer = File.AppendText(@"C:\Users\Brent\Documents\errors.txt"))
+                        {
+                            writer.WriteLine(movieFile.Name + ": Omzetten naar MKV");
+                        }
+                    }
+
+                    try
+                    {
+                        movieFile.Delete();
+                    }
+                    catch (Exception)
+                    {
+                        using (StreamWriter writer = File.AppendText(@"C:\Users\Brent\Documents\errors.txt"))
+                        {
+                            writer.WriteLine(movieFile.Name + ": Verwijderen van originele");
+                        }
+                    }
+
+
+                    using (StreamWriter writer = File.AppendText(@"C:\Users\Brent\Documents\done.txt"))
+                    {
+                        writer.WriteLine(movieFile.Name);
+                    }
+                }
+            }
+            else
+            {
+                if (folder.GetDirectories().Length == 0 && folder.GetFiles().Length != 0)
+                {
+                    using (StreamWriter writer = File.AppendText(@"C:\Users\Brent\Documents\errors.txt"))
+                    {
+                        writer.WriteLine(folder.Name + ": Iets mis met inhoud van de map");
+                    }
+                }
+            }
+
+            foreach (var map in folder.GetDirectories())
+            {
+                leesFolder(map, worker);
+            }
+        }
+
+        private void runCmd(string command)
+        {
+            using (Process pProcess = new Process())
+            {
+                pProcess.StartInfo.FileName = @"C:\Program Files (x86)\MKVToolNix\mkvmerge.exe";
+                pProcess.StartInfo.Arguments = command; //argument
+                pProcess.StartInfo.UseShellExecute = false;
+                pProcess.StartInfo.RedirectStandardOutput = true;
+                pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                pProcess.StartInfo.CreateNoWindow = true; //not diplay a windows
+                pProcess.Start();
+                string output = pProcess.StandardOutput.ReadToEnd(); //The output result
+                pProcess.WaitForExit();
+            }
+        }
+
+        private void btnFilmUpdaten_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

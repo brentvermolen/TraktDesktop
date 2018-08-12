@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,6 +53,11 @@
     </Compile>
     <Compile Include="Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dtsFilmTags.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsFilmTags.xsd</DependentUpon>
     </Compile>
     <Compile Include="dtsSeriesAfleveringen.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -80,6 +88,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="dtsFilmTags.xsc">
+      <DependentUpon>dtsFilmTags.xsd</DependentUpon>
+    </None>
+    <None Include="dtsFilmTags.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsFilmTags.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="dtsFilmTags.xss">
+      <DependentUpon>dtsFilmTags.xsd</DependentUpon>
+    </None>
     <None Include="dtsSeriesAfleveringen.xsc">
       <DependentUpon>dtsSeriesAfleveringen.xsd</DependentUpon>
     </None>
@@ -91,6 +110,7 @@
     <None Include="dtsSeriesAfleveringen.xss">
       <DependentUpon>dtsSeriesAfleveringen.xsd</DependentUpon>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
