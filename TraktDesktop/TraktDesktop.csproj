@@ -48,11 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiKey.cs" />
     <Compile Include="Dashboard.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\InputFilm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\InputFilm.Designer.cs">
+      <DependentUpon>InputFilm.cs</DependentUpon>
     </Compile>
     <Compile Include="dtsFilmTags.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -63,6 +70,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>dtsSeriesAfleveringen.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="FilmZoeken.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilmZoeken.Designer.cs">
+      <DependentUpon>FilmZoeken.cs</DependentUpon>
     </Compile>
     <Compile Include="frmTags.cs">
       <SubType>Form</SubType>
@@ -80,6 +93,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\InputFilm.resx">
+      <DependentUpon>InputFilm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilmZoeken.resx">
+      <DependentUpon>FilmZoeken.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTags.resx">
       <DependentUpon>frmTags.cs</DependentUpon>

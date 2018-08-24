@@ -49,17 +49,17 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.grpLoading = new System.Windows.Forms.GroupBox();
             this.lblLoading = new System.Windows.Forms.Label();
-            this.picLoading = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.dtsFilmTags1 = new TraktDesktop.dtsFilmTags();
+            this.picLoading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.grpLoading.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.SuspendLayout();
             // 
             // dtsSeriesAfleveringen1
@@ -177,6 +177,7 @@
             this.btnFilmToevoegen.TabIndex = 1;
             this.btnFilmToevoegen.Text = "Film Toevoegen";
             this.btnFilmToevoegen.UseVisualStyleBackColor = true;
+            this.btnFilmToevoegen.Click += new System.EventHandler(this.btnFilmToevoegen_Click);
             // 
             // btnFilmsToevoegen
             // 
@@ -265,7 +266,7 @@
             // 
             this.grpLoading.Controls.Add(this.lblLoading);
             this.grpLoading.Controls.Add(this.picLoading);
-            this.grpLoading.Location = new System.Drawing.Point(11, 6);
+            this.grpLoading.Location = new System.Drawing.Point(12, 6);
             this.grpLoading.Name = "grpLoading";
             this.grpLoading.Size = new System.Drawing.Size(521, 429);
             this.grpLoading.TabIndex = 8;
@@ -279,17 +280,6 @@
             this.lblLoading.Size = new System.Drawing.Size(502, 23);
             this.lblLoading.TabIndex = 12;
             this.lblLoading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // picLoading
-            // 
-            this.picLoading.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picLoading.Image = global::TraktDesktop.Properties.Resources.loading;
-            this.picLoading.Location = new System.Drawing.Point(3, 16);
-            this.picLoading.Name = "picLoading";
-            this.picLoading.Size = new System.Drawing.Size(515, 410);
-            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picLoading.TabIndex = 11;
-            this.picLoading.TabStop = false;
             // 
             // button1
             // 
@@ -307,6 +297,17 @@
             this.dtsFilmTags1.DataSetName = "dtsFilmTags";
             this.dtsFilmTags1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
+            // picLoading
+            // 
+            this.picLoading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picLoading.Image = global::TraktDesktop.Properties.Resources.loading;
+            this.picLoading.Location = new System.Drawing.Point(3, 16);
+            this.picLoading.Name = "picLoading";
+            this.picLoading.Size = new System.Drawing.Size(515, 410);
+            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picLoading.TabIndex = 11;
+            this.picLoading.TabStop = false;
+            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -318,6 +319,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.grpLoading);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Dashboard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.Dashboard_Load);
@@ -327,8 +329,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.grpLoading.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
             this.ResumeLayout(false);
 
         }

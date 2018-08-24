@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using TraktDesktop.Dialogs;
 
 namespace TraktDesktop
 {
@@ -159,7 +160,7 @@ namespace TraktDesktop
 
             if (aflevering != null)
             {
-                string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam;
+                string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam.Replace(":", " -");
                 string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
 
                 if (File.Exists(fullName) == false)
@@ -218,7 +219,7 @@ namespace TraktDesktop
                         {
                             try
                             {
-                                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE", film.ID, "2719fd17f1c54d219dedc3aa9309a1e2"));
+                                var json = client.DownloadString(string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE", film.ID, ApiKey.MovieDB));
                                 var jobject = JObject.Parse(json);
 
                                 success = true;
@@ -406,6 +407,18 @@ namespace TraktDesktop
         private void btnExporteren_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnFilmToevoegen_Click(object sender, EventArgs e)
+        {
+            InputFilm inputFilm = new InputFilm();
+            inputFilm.ShowDialog();
+
+            if (inputFilm.DialogResult == DialogResult.OK)
+            {
+                FilmZoeken filmToevoegen = new FilmZoeken(inputFilm.Titel, inputFilm.Jaartal);
+                filmToevoegen.ShowDialog();
+            }
         }
     }
 }
