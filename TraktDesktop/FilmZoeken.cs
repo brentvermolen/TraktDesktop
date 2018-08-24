@@ -9,6 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TraktDesktop.dtsFilmTagsTableAdapters;
 
 namespace TraktDesktop
 {
@@ -16,6 +17,8 @@ namespace TraktDesktop
     {
         public string titel;
         public int jaartal;
+
+        public FilmsTableAdapter FilmsAdapter;
 
         public FilmZoeken(string titel, int jaartal)
         {
@@ -30,14 +33,27 @@ namespace TraktDesktop
             grpLoading.BringToFront();
 
             BackgroundWorker bw = new BackgroundWorker();
+            bw.WorkerReportsProgress = true;
 
             List<GroupBox> toAdd = new List<GroupBox>();
 
             grpLoading.Visible = true;
-            lblLoading.Text = "Film Zoeken";
+
+            bw.ProgressChanged += new ProgressChangedEventHandler((obj, args) =>
+            {
+                lblLoading.Text = args.UserState.ToString();
+            });
 
             bw.DoWork += new DoWorkEventHandler((obj, args) =>
             {
+                if (FilmsAdapter == null)
+                {
+                    bw.ReportProgress(0, "Films Inladden");
+                    FilmsAdapter = new dtsFilmTagsTableAdapters.FilmsTableAdapter();
+                    FilmsAdapter.Fill(dtsFilmTags1.Films);
+                }
+
+                bw.ReportProgress(0, "Films Zoeken");
                 string request = string.Format("https://api.themoviedb.org/3/search/movie?api_key={0}&query={1}&year={2}", ApiKey.MovieDB, titel, jaartal);
 
                 using (WebClient client = new WebClient())
@@ -96,11 +112,21 @@ namespace TraktDesktop
 
                         Button btnToevoegen = new Button()
                         {
-                            Text = "'" + result.SelectToken("original_title") + "' Toevoegen",
                             Name = result.SelectToken("id").ToString(),
                             Location = new Point(166, 226),
                             Size = new Size(310, 23)
                         };
+
+                        if (FilmsAdapter.GetData().FirstOrDefault(f => f.ID == int.Parse(btnToevoegen.Name)) == null)
+                        {
+                            btnToevoegen.Text = "'" + result.SelectToken("original_title") + "' Toevoegen";
+                            btnToevoegen.Enabled = true;
+                        }
+                        else
+                        {
+                            btnToevoegen.Text = "'" + result.SelectToken("original_title") + "' is al toegevoegd";
+                            btnToevoegen.Enabled = false;
+                        }
 
                         btnToevoegen.Click += BtnToevoegen_Click;
 

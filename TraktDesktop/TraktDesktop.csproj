@@ -66,10 +66,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dtsFilmTags.xsd</DependentUpon>
     </Compile>
+    <Compile Include="dtsFilmToevoegen.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsFilmToevoegen.xsd</DependentUpon>
+    </Compile>
     <Compile Include="dtsSeriesAfleveringen.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>dtsSeriesAfleveringen.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="FilmToevoegen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilmToevoegen.Designer.cs">
+      <DependentUpon>FilmToevoegen.cs</DependentUpon>
     </Compile>
     <Compile Include="FilmZoeken.cs">
       <SubType>Form</SubType>
@@ -96,6 +107,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\InputFilm.resx">
       <DependentUpon>InputFilm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilmToevoegen.resx">
+      <DependentUpon>FilmToevoegen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FilmZoeken.resx">
       <DependentUpon>FilmZoeken.cs</DependentUpon>
@@ -126,6 +140,17 @@
     </None>
     <None Include="dtsFilmTags.xss">
       <DependentUpon>dtsFilmTags.xsd</DependentUpon>
+    </None>
+    <None Include="dtsFilmToevoegen.xsc">
+      <DependentUpon>dtsFilmToevoegen.xsd</DependentUpon>
+    </None>
+    <None Include="dtsFilmToevoegen.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsFilmToevoegen.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="dtsFilmToevoegen.xss">
+      <DependentUpon>dtsFilmToevoegen.xsd</DependentUpon>
     </None>
     <None Include="dtsSeriesAfleveringen.xsc">
       <DependentUpon>dtsSeriesAfleveringen.xsd</DependentUpon>
