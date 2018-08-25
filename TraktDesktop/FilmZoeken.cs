@@ -163,6 +163,241 @@ namespace TraktDesktop
         private void BtnToevoegen_Click(object sender, EventArgs e)
         {
             Button btnSender = (Button)sender;
+            int filmId = int.Parse(btnSender.Name);
+
+            BackgroundWorker bw = new BackgroundWorker();
+
+            btnSender.Enabled = false;
+            btnSender.Text = "Bezig met toevoegen";
+
+            bw.DoWork += new DoWorkEventHandler((obj, args) =>
+            {
+                string request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=en-EN&append_to_response=videos", filmId, ApiKey.MovieDB);
+
+                using (WebClient client = new WebClient())
+                {
+                    client.Encoding = Encoding.UTF8;
+                    var json = client.DownloadString(request);
+                    JObject obje = JObject.Parse(json);
+
+                    var film = dtsAlles1.Films.NewFilmsRow();
+                    film.ID = filmId;
+                    try
+                    {
+                        film.Duur = (int)obje.SelectToken("runtime");
+                    }
+                    catch (Exception) { film.Duur = 0; }
+
+                    try
+                    {
+                        film.Tagline = (string)obje.SelectToken("tagline");
+                    }
+                    catch (Exception) { film.Tagline = ""; }
+
+                    try
+                    {
+                        film.Omschrijving = (string)obje.SelectToken("overview");
+                    }
+                    catch (Exception) { film.Omschrijving = ""; }
+
+                    try
+                    {
+                        film.ReleaseDate = (string)obje.SelectToken("release_date");
+                    }
+                    catch (Exception) { film.ReleaseDate = DateTime.Today.ToString("dd/MM/yyyy"); }
+
+                    var CollectieID = 0;
+                    try
+                    {
+                        CollectieID = (int)obje.SelectToken("belongs_to_collection.id");
+                    }
+                    catch (Exception) { }
+                    film.CollectieID = CollectieID;
+
+                    if (dtsAlles1.Collecties.FindByID(CollectieID) == null)
+                    {
+                        json = client.DownloadString(string.Format("https://api.themoviedb.org/3/collection/{0}?api_key={1}", CollectieID, ApiKey.MovieDB));
+                        obje = JObject.Parse(json);
+
+                        //CollectieMng.AddCollectie(collectie);
+                        dtsAlles.CollectiesRow collectiesRow = dtsAlles1.Collecties.NewCollectiesRow();
+                        collectiesRow.ID = CollectieID;
+                        collectiesRow.Naam = obje.SelectToken("name").ToString();
+                        collectiesRow.PosterPath = obje.SelectToken("poster_path").ToString();
+
+                        dtsAlles1.Collecties.AddCollectiesRow(collectiesRow);
+                        DAC.CollectiesTA.Update(dtsAlles1);
+
+                        foreach (var f in obje.SelectToken("parts"))
+                        {
+                            //Film filmDb = FilmMng.ReadFilm((int)f.SelectToken("id"));
+                            var filmDb = dtsAlles1.Films.FindByID((int)f.SelectToken("id"));
+
+                            if (filmDb != null)
+                            {
+                                filmDb.CollectieID = CollectieID;
+                                DAC.FilmsTA.Update(dtsAlles1);
+                                //FilmMng.ChangeFilm(filmDb);
+                            }
+                        }
+                    }
+
+                    try
+                    {
+                        foreach (var video in obje.SelectToken("videos.results"))
+                        {
+                            if (((string)video.SelectToken("site")).Equals("YouTube"))
+                            {
+                                film.TrailerId = (string)video.SelectToken("key");
+
+                                if (((string)video.SelectToken("type")).Equals("Trailer"))
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception) { }
+                    film.Toegevoegd = DateTime.Now;
+
+                    request = string.Format("https://api.themoviedb.org/3/movie/{0}?api_key={1}&language=nl-BE&append_to_response=videos", filmId, ApiKey.MovieDB);
+
+                    json = client.DownloadString(request);
+                    obje = JObject.Parse(json);
+
+                    try
+                    {
+                        film.Naam = (string)obje.SelectToken("original_title");
+                    }
+                    catch (Exception) { }
+
+                    string nlOmsch = (string)obje.SelectToken("overview");
+                    string nlTagline = (string)obje.SelectToken("tagline");
+                    string nlTrailer = null;
+
+                    try
+                    {
+                        film.PosterPath = (string)obje.SelectToken("poster_path");
+                    }
+                    catch (Exception) { film.PosterPath = ""; }
+
+                    foreach (var video in obje.SelectToken("videos.results"))
+                    {
+                        if (((string)video.SelectToken("site")).Equals("YouTube"))
+                        {
+                            nlTrailer = (string)video.SelectToken("key");
+
+                            if (((string)video.SelectToken("type")).Equals("Trailer"))
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (nlOmsch != null)
+                    {
+                        if (!nlOmsch.Equals(""))
+                        {
+                            film.Omschrijving = nlOmsch;
+                        }
+                    }
+                    if (nlTagline != null)
+                    {
+                        if (!nlTagline.Equals(""))
+                        {
+                            film.Tagline = nlTagline;
+                        }
+                    }
+                    if (nlTrailer != null)
+                    {
+                        if (!nlTrailer.Equals(""))
+                        {
+                            film.TrailerId = nlTrailer;
+                        }
+                    }
+
+                    //FilmMng.AddFilm(film);
+                    
+                    dtsAlles1.Films.AddFilmsRow(film);
+                    DAC.FilmsTA.Update(dtsAlles1);
+
+                    //film.Tags = new List<Tag>();
+
+                    foreach (var genre in obje.SelectToken("genres"))
+                    {
+                        //Tag tag = FilmMng.ReadTag((string)genre.SelectToken("name"));
+                        var tag = dtsAlles1.Tags.FirstOrDefault(t => t.Naam.Equals((string)genre.SelectToken("name")));
+
+                        if (tag == null)
+                        {
+                            var tagRow = dtsAlles1.Tags.NewTagsRow();
+                            tagRow.ID = dtsAlles1.Tags.Max(t => t.ID) + 1;
+                            tagRow.Naam = genre.SelectToken("name").ToString();
+
+                            dtsAlles1.Tags.AddTagsRow(tagRow);
+                            DAC.TagsTA.Update(dtsAlles1);
+                        }
+
+                        var filmTag = dtsAlles1.FilmTags.NewFilmTagsRow();
+                        filmTag.Film_ID = film.ID;
+                        filmTag.Tag_ID = tag.ID;
+
+                        dtsAlles1.FilmTags.AddFilmTagsRow(filmTag);
+                    }
+
+                    DAC.FilmTagsTA.Update(dtsAlles1);
+
+                    using (WebClient clientActeurs = new WebClient())
+                    {
+                        request = string.Format("https://api.themoviedb.org/3/movie/{0}/credits?api_key={1}", film.ID, ApiKey.MovieDB);
+                        clientActeurs.Encoding = Encoding.UTF8;
+                        json = client.DownloadString(request);
+
+                        obje = JObject.Parse(json);
+
+                        //film.Acteurs = new List<ActeurFilm>();
+
+                        foreach (var acteur in obje.SelectToken("cast"))
+                        {
+                            if ((int)acteur.SelectToken("order") < 15)
+                            {
+                                int acteurId = (int)acteur.SelectToken("id");
+                                //Acteur a = ActeurMng.ReadActeur(acteurId);
+                                var a = dtsAlles1.Acteurs.FindByID(acteurId);
+
+                                if (a == null)
+                                {
+                                    a = dtsAlles1.Acteurs.NewActeursRow();
+
+                                    a.ID = acteurId;
+                                    a.Naam = (string)acteur.SelectToken("name");
+                                    a.ImagePath = (string)acteur.SelectToken("profile_path");
+
+                                    dtsAlles1.Acteurs.AddActeursRow(a);
+                                    DAC.ActeursTA.Update(dtsAlles1);
+                                }
+
+                                var acteurFilm = dtsAlles1.ActeurFilms.NewActeurFilmsRow();
+
+                                acteurFilm.ActeurID = acteurId;
+                                acteurFilm.FilmID = film.ID;
+                                acteurFilm.Sort = (int)acteur.SelectToken("order");
+                                acteurFilm.Karakter = (string)acteur.SelectToken("character");
+
+                                dtsAlles1.ActeurFilms.AddActeurFilmsRow(acteurFilm);
+                                DAC.ActeursFilmsTA.Update(dtsAlles1);
+                            }
+                        }
+                    }
+                }
+            });
+
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((obj, args) =>
+            {
+                btnSender.Text = "Toevoegen geslaagd";
+            });
+
+            bw.RunWorkerAsync();
         }
     }
 }

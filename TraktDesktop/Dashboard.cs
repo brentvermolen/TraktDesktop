@@ -241,16 +241,16 @@ namespace TraktDesktop
                                         tagsRow.Naam = naam;
 
                                         tag = tagsRow;
-                                        dtsFilmTags1.Tags.Rows.Add(tagsRow);
+                                        dtsAlles1.Tags.Rows.Add(tagsRow);
                                     }
 
                                     if (filmTagList.FirstOrDefault(t => t.Tag_ID == tag.ID) == null)
                                     {
-                                        dtsFilmTags.FilmTagsRow filmTagsRow = dtsFilmTags1.FilmTags.NewFilmTagsRow();
+                                        dtsAlles.FilmTagsRow filmTagsRow = dtsAlles1.FilmTags.NewFilmTagsRow();
                                         filmTagsRow.Film_ID = film.ID;
                                         filmTagsRow.Tag_ID = tag.ID;
 
-                                        dtsFilmTags1.FilmTags.Rows.Add(filmTagsRow);
+                                        dtsAlles1.FilmTags.Rows.Add(filmTagsRow);
                                     }
                                 }
 
@@ -415,9 +415,8 @@ namespace TraktDesktop
         private void btnFilmToevoegen_Click(object sender, EventArgs e)
         {
             InputFilm inputFilm = new InputFilm();
-            inputFilm.ShowDialog();
-
-            if (inputFilm.DialogResult == DialogResult.OK)
+            
+            if (inputFilm.ShowDialog() == DialogResult.OK)
             {
                 FilmZoeken filmToevoegen = new FilmZoeken(DAC, dtsAlles1, inputFilm.Titel, inputFilm.Jaartal);
                 filmToevoegen.ShowDialog();

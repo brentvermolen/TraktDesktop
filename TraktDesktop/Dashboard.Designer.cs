@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dtsSeriesAfleveringen1 = new TraktDesktop.dtsSeriesAfleveringen();
             this.ofd = new System.Windows.Forms.OpenFileDialog();
             this.btnArchiefVerwijderen = new System.Windows.Forms.Button();
             this.btnBekijkArchief = new System.Windows.Forms.Button();
@@ -51,21 +50,13 @@
             this.lblLoading = new System.Windows.Forms.Label();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.dtsFilmTags1 = new TraktDesktop.dtsFilmTags();
-            ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.grpLoading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dtsSeriesAfleveringen1
-            // 
-            this.dtsSeriesAfleveringen1.DataSetName = "dtsSeriesAfleveringen";
-            this.dtsSeriesAfleveringen1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // ofd
             // 
@@ -303,11 +294,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // dtsFilmTags1
-            // 
-            this.dtsFilmTags1.DataSetName = "dtsFilmTags";
-            this.dtsFilmTags1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -325,20 +311,17 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.Dashboard_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.grpLoading.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private dtsSeriesAfleveringen dtsSeriesAfleveringen1;
         private System.Windows.Forms.OpenFileDialog ofd;
         private System.Windows.Forms.Button btnArchiefVerwijderen;
         private System.Windows.Forms.Button btnBekijkArchief;
@@ -359,7 +342,6 @@
         private System.Windows.Forms.Label lblLoading;
         private System.Windows.Forms.PictureBox picLoading;
         private System.Windows.Forms.Button button1;
-        private dtsFilmTags dtsFilmTags1;
         private System.Windows.Forms.Button btnOmzettenMKV;
         private System.Windows.Forms.Button btnCollectieUpdaten;
     }
