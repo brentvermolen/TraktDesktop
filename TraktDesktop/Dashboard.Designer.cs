@@ -49,17 +49,17 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.grpLoading = new System.Windows.Forms.GroupBox();
             this.lblLoading = new System.Windows.Forms.Label();
+            this.picLoading = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
             this.dtsFilmTags1 = new TraktDesktop.dtsFilmTags();
-            this.picLoading = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.grpLoading.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).BeginInit();
             this.SuspendLayout();
             // 
             // dtsSeriesAfleveringen1
@@ -281,6 +281,17 @@
             this.lblLoading.TabIndex = 12;
             this.lblLoading.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // picLoading
+            // 
+            this.picLoading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picLoading.Image = global::TraktDesktop.Properties.Resources.loading;
+            this.picLoading.Location = new System.Drawing.Point(3, 16);
+            this.picLoading.Name = "picLoading";
+            this.picLoading.Size = new System.Drawing.Size(515, 410);
+            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picLoading.TabIndex = 11;
+            this.picLoading.TabStop = false;
+            // 
             // button1
             // 
             this.button1.Enabled = false;
@@ -297,17 +308,6 @@
             this.dtsFilmTags1.DataSetName = "dtsFilmTags";
             this.dtsFilmTags1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // picLoading
-            // 
-            this.picLoading.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picLoading.Image = global::TraktDesktop.Properties.Resources.loading;
-            this.picLoading.Location = new System.Drawing.Point(3, 16);
-            this.picLoading.Name = "picLoading";
-            this.picLoading.Size = new System.Drawing.Size(515, 410);
-            this.picLoading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picLoading.TabIndex = 11;
-            this.picLoading.TabStop = false;
-            // 
             // Dashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -321,7 +321,9 @@
             this.Controls.Add(this.grpLoading);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Dashboard";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.Dashboard_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dtsSeriesAfleveringen1)).EndInit();
             this.groupBox3.ResumeLayout(false);
@@ -329,8 +331,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.grpLoading.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).EndInit();
             this.ResumeLayout(false);
 
         }

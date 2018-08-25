@@ -32,11 +32,9 @@
             this.grpLoading = new System.Windows.Forms.GroupBox();
             this.lblLoading = new System.Windows.Forms.Label();
             this.picLoading = new System.Windows.Forms.PictureBox();
-            this.dtsFilmTags1 = new TraktDesktop.dtsFilmTags();
             this.pnlResultaten.SuspendLayout();
             this.grpLoading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlResultaten
@@ -79,11 +77,6 @@
             this.picLoading.TabIndex = 11;
             this.picLoading.TabStop = false;
             // 
-            // dtsFilmTags1
-            // 
-            this.dtsFilmTags1.DataSetName = "dtsFilmTags";
-            this.dtsFilmTags1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
             // FilmZoeken
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -100,7 +93,6 @@
             this.pnlResultaten.ResumeLayout(false);
             this.grpLoading.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -111,6 +103,5 @@
         private System.Windows.Forms.GroupBox grpLoading;
         private System.Windows.Forms.Label lblLoading;
         private System.Windows.Forms.PictureBox picLoading;
-        private dtsFilmTags dtsFilmTags1;
     }
 }

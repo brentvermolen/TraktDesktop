@@ -18,11 +18,17 @@ namespace TraktDesktop
         public string titel;
         public int jaartal;
 
-        public FilmsTableAdapter FilmsAdapter;
+        DataAccessClass DAC;
+        dtsAlles dtsAlles1;
 
-        public FilmZoeken(string titel, int jaartal)
+        //public FilmsTableAdapter FilmsAdapter;
+
+        public FilmZoeken(DataAccessClass DAC, dtsAlles dtsAlles, string titel, int jaartal)
         {
             InitializeComponent();
+
+            this.DAC = DAC;
+            this.dtsAlles1 = dtsAlles;
 
             this.titel = titel;
             this.jaartal = jaartal;
@@ -46,12 +52,12 @@ namespace TraktDesktop
 
             bw.DoWork += new DoWorkEventHandler((obj, args) =>
             {
-                if (FilmsAdapter == null)
-                {
-                    bw.ReportProgress(0, "Films Inladden");
-                    FilmsAdapter = new dtsFilmTagsTableAdapters.FilmsTableAdapter();
-                    FilmsAdapter.Fill(dtsFilmTags1.Films);
-                }
+                //if (FilmsAdapter == null)
+                //{
+                //    bw.ReportProgress(0, "Films Inladden");
+                //    FilmsAdapter = new dtsFilmTagsTableAdapters.FilmsTableAdapter();
+                //    FilmsAdapter.Fill(dtsFilmTags1.Films);
+                //}
 
                 bw.ReportProgress(0, "Films Zoeken");
                 string request = string.Format("https://api.themoviedb.org/3/search/movie?api_key={0}&query={1}&year={2}", ApiKey.MovieDB, titel, jaartal);
@@ -65,8 +71,13 @@ namespace TraktDesktop
                     int startX = 6;
                     int startY = 6;
 
+                    int aantal = json.SelectToken("results").Count();
+                    int tel = 1;
+
                     foreach (var result in json.SelectToken("results"))
                     {
+                        bw.ReportProgress(0, "Films Zoeken (" + tel++ + "/" + aantal + ")");
+
                         GroupBox groupBox = new GroupBox()
                         {
                             Text = result.SelectToken("original_title").ToString(),
@@ -117,7 +128,7 @@ namespace TraktDesktop
                             Size = new Size(310, 23)
                         };
 
-                        if (FilmsAdapter.GetData().FirstOrDefault(f => f.ID == int.Parse(btnToevoegen.Name)) == null)
+                        if (DAC.FilmsTA.GetData().FirstOrDefault(f => f.ID == int.Parse(btnToevoegen.Name)) == null)
                         {
                             btnToevoegen.Text = "'" + result.SelectToken("original_title") + "' Toevoegen";
                             btnToevoegen.Enabled = true;

@@ -55,11 +55,17 @@
     <Compile Include="Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataAccessClass.cs" />
     <Compile Include="Dialogs\InputFilm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\InputFilm.Designer.cs">
       <DependentUpon>InputFilm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dtsAlles.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dtsAlles.xsd</DependentUpon>
     </Compile>
     <Compile Include="dtsFilmTags.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -102,6 +108,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </EmbeddedResource>
@@ -130,6 +142,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="dtsAlles.xsc">
+      <DependentUpon>dtsAlles.xsd</DependentUpon>
+    </None>
+    <None Include="dtsAlles.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dtsAlles.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="dtsAlles.xss">
+      <DependentUpon>dtsAlles.xsd</DependentUpon>
+    </None>
     <None Include="dtsFilmTags.xsc">
       <DependentUpon>dtsFilmTags.xsd</DependentUpon>
     </None>

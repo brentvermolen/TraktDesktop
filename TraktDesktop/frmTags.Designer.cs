@@ -28,24 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.dtsFilmTags1 = new TraktDesktop.dtsFilmTags();
             this.lstTags = new System.Windows.Forms.ListBox();
             this.grpLoading = new System.Windows.Forms.GroupBox();
             this.lblLoading = new System.Windows.Forms.Label();
             this.picLoading = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lblTag = new System.Windows.Forms.Label();
             this.lblAantal = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).BeginInit();
+            this.lblTag = new System.Windows.Forms.Label();
             this.grpLoading.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // dtsFilmTags1
-            // 
-            this.dtsFilmTags1.DataSetName = "dtsFilmTags";
-            this.dtsFilmTags1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // lstTags
             // 
@@ -96,6 +89,15 @@
             this.panel1.Size = new System.Drawing.Size(317, 265);
             this.panel1.TabIndex = 10;
             // 
+            // lblAantal
+            // 
+            this.lblAantal.AutoSize = true;
+            this.lblAantal.Location = new System.Drawing.Point(12, 32);
+            this.lblAantal.Name = "lblAantal";
+            this.lblAantal.Size = new System.Drawing.Size(59, 13);
+            this.lblAantal.TabIndex = 2;
+            this.lblAantal.Text = "aantal films";
+            // 
             // lblTag
             // 
             this.lblTag.AutoSize = true;
@@ -105,15 +107,6 @@
             this.lblTag.Size = new System.Drawing.Size(66, 22);
             this.lblTag.TabIndex = 1;
             this.lblTag.Text = "lblTag";
-            // 
-            // lblAantal
-            // 
-            this.lblAantal.AutoSize = true;
-            this.lblAantal.Location = new System.Drawing.Point(12, 32);
-            this.lblAantal.Name = "lblAantal";
-            this.lblAantal.Size = new System.Drawing.Size(59, 13);
-            this.lblAantal.TabIndex = 2;
-            this.lblAantal.Text = "aantal films";
             // 
             // frmTags
             // 
@@ -128,7 +121,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tags";
             this.Load += new System.EventHandler(this.frmTags_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dtsFilmTags1)).EndInit();
             this.grpLoading.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picLoading)).EndInit();
             this.panel1.ResumeLayout(false);
@@ -138,8 +130,6 @@
         }
 
         #endregion
-
-        private dtsFilmTags dtsFilmTags1;
         private System.Windows.Forms.ListBox lstTags;
         private System.Windows.Forms.GroupBox grpLoading;
         private System.Windows.Forms.Label lblLoading;

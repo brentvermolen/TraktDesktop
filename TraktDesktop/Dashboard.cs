@@ -39,24 +39,27 @@ namespace TraktDesktop
 
             worker.RunWorkerAsync();
          */
-        private dtsSeriesAfleveringenTableAdapters.SeriesTableAdapter SeriesAdapter;
+        /*private dtsSeriesAfleveringenTableAdapters.SeriesTableAdapter SeriesAdapter;
         private dtsSeriesAfleveringenTableAdapters.AfleveringsTableAdapter AfleveringenAdpater;
 
         private dtsFilmTagsTableAdapters.FilmsTableAdapter FilmsAdapter;
         private dtsFilmTagsTableAdapters.FilmTagsTableAdapter FilmTagsAdapter;
-        private dtsFilmTagsTableAdapters.TagsTableAdapter TagsAdapter;
+        private dtsFilmTagsTableAdapters.TagsTableAdapter TagsAdapter;*/
+        
+        private DataAccessClass DAC;
+        private dtsAlles dtsAlles1;
 
-        public Dashboard()
+        public Dashboard(DataAccessClass DAC, dtsAlles dtsAlles)
         {
             InitializeComponent();
+
+            this.DAC = DAC;
+            this.dtsAlles1 = dtsAlles;
         }
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
             grpLoading.BringToFront();
-
-            //SeriesAdapter = new dtsSeriesAfleveringenTableAdapters.SeriesTableAdapter();
-            //SeriesAdapter.Fill(dtsSeriesAfleveringen1.Series);
         }
 
         private void btnWijzigNamen_Click(object sender, EventArgs e)
@@ -79,11 +82,11 @@ namespace TraktDesktop
             {
                 worker.ReportProgress(0, "Gegevens inladen");
 
-                if (AfleveringenAdpater == null)
+                /*if (AfleveringenAdpater == null)
                 {
                     AfleveringenAdpater = new dtsSeriesAfleveringenTableAdapters.AfleveringsTableAdapter();
                     AfleveringenAdpater.Fill(dtsSeriesAfleveringen1.Afleverings);
-                }
+                }*/
 
                 worker.ReportProgress(0, "Serie kiezen");
 
@@ -94,7 +97,7 @@ namespace TraktDesktop
 
                 worker.ReportProgress(0, "Afleveringen zoeken");
 
-                var afleveringen = AfleveringenAdpater.GetData().Where(a => a.SerieID == serieId);
+                var afleveringen = DAC.AfleveringenTA.GetData().Where(a => a.SerieID == serieId);
 
                 worker.ReportProgress(0, "Bestanden wijzigen");
 
@@ -114,7 +117,7 @@ namespace TraktDesktop
             worker.RunWorkerAsync();
         }
 
-        private void SearchInFolder(DirectoryInfo dirFolder, int serieId, EnumerableRowCollection<dtsSeriesAfleveringen.AfleveringsRow> afleveringen)
+        private void SearchInFolder(DirectoryInfo dirFolder, int serieId, EnumerableRowCollection<dtsAlles.AfleveringsRow> afleveringen)
         {
             foreach (var folder in dirFolder.GetDirectories())
             {
@@ -151,7 +154,7 @@ namespace TraktDesktop
             }
         }
 
-        private void MoveBestand(EnumerableRowCollection<dtsSeriesAfleveringen.AfleveringsRow> afleveringen, FileInfo bestand, Match match)
+        private void MoveBestand(EnumerableRowCollection<dtsAlles.AfleveringsRow> afleveringen, FileInfo bestand, Match match)
         {
             int seizoen = int.Parse(match.Groups[1].Value);
             int afl = int.Parse(match.Groups[2].Value);
@@ -181,33 +184,33 @@ namespace TraktDesktop
             {
                 worker.ReportProgress(0, "Films inladen");
 
-                if (FilmsAdapter == null)
+                /*if (FilmsAdapter == null)
                 {
                     FilmsAdapter = new dtsFilmTagsTableAdapters.FilmsTableAdapter();
                     FilmsAdapter.Fill(dtsFilmTags1.Films);
-                }
+                }*/
 
                 worker.ReportProgress(0, "Tags inladen");
 
-                if (TagsAdapter == null)
+                /*if (TagsAdapter == null)
                 {
                     TagsAdapter = new dtsFilmTagsTableAdapters.TagsTableAdapter();
                     TagsAdapter.Fill(dtsFilmTags1.Tags);
-                }
+                }*/
 
                 worker.ReportProgress(0, "Film Tags inladen");
 
-                if (FilmTagsAdapter == null)
+                /*if (FilmTagsAdapter == null)
                 {
                     FilmTagsAdapter = new dtsFilmTagsTableAdapters.FilmTagsTableAdapter();
                     FilmTagsAdapter.Fill(dtsFilmTags1.FilmTags);
-                }
+                }*/
 
-                foreach (var film in FilmsAdapter.GetData().OrderBy(f => f.Naam))
+                foreach (var film in DAC.FilmsTA.GetData().OrderBy(f => f.Naam))
                 {
                     worker.ReportProgress(0, film.Naam);
 
-                    var filmTagList = FilmTagsAdapter.GetData().Where(t => t.Film_ID == film.ID);
+                    var filmTagList = DAC.FilmTagsTA.GetData().Where(t => t.Film_ID == film.ID);
 
                     using (WebClient client = new WebClient())
                     {
@@ -229,11 +232,11 @@ namespace TraktDesktop
                                     var naam = genre.SelectToken("name").ToString();
                                     worker.ReportProgress(0, film.Naam + " - " + naam);
 
-                                    var tag = TagsAdapter.GetData().FirstOrDefault(t => t.Naam.Equals(naam));
+                                    var tag = DAC.TagsTA.GetData().FirstOrDefault(t => t.Naam.Equals(naam));
                                     if (tag == null)
                                     {
-                                        var maxId = TagsAdapter.GetData().Max(t => t.ID) + 1;
-                                        dtsFilmTags.TagsRow tagsRow = dtsFilmTags1.Tags.NewTagsRow();
+                                        var maxId = DAC.TagsTA.GetData().Max(t => t.ID) + 1;
+                                        dtsAlles.TagsRow tagsRow = dtsAlles1.Tags.NewTagsRow();
                                         tagsRow.ID = maxId;
                                         tagsRow.Naam = naam;
 
@@ -253,8 +256,8 @@ namespace TraktDesktop
 
                                 worker.ReportProgress(0, film.Naam + " opslaan");
 
-                                TagsAdapter.Update(dtsFilmTags1);
-                                FilmTagsAdapter.Update(dtsFilmTags1);
+                                DAC.TagsTA.Update(dtsAlles1);
+                                DAC.FilmTagsTA.Update(dtsAlles1);
                             }
                             catch (Exception)
                             {
@@ -400,7 +403,7 @@ namespace TraktDesktop
 
         private void btnTags_Click(object sender, EventArgs e)
         {
-            frmTags frm = new frmTags();
+            frmTags frm = new frmTags(DAC, dtsAlles1);
             frm.ShowDialog();
         }
 
@@ -416,7 +419,7 @@ namespace TraktDesktop
 
             if (inputFilm.DialogResult == DialogResult.OK)
             {
-                FilmZoeken filmToevoegen = new FilmZoeken(inputFilm.Titel, inputFilm.Jaartal);
+                FilmZoeken filmToevoegen = new FilmZoeken(DAC, dtsAlles1, inputFilm.Titel, inputFilm.Jaartal);
                 filmToevoegen.ShowDialog();
             }
         }
