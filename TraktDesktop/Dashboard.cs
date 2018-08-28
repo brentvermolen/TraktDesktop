@@ -90,7 +90,7 @@ namespace TraktDesktop
 
                 worker.ReportProgress(0, "Serie kiezen");
 
-                KiesSerie frm = new KiesSerie();
+                KiesSerie frm = new KiesSerie(DAC, dtsAlles1);
                 frm.ShowDialog();
 
                 int serieId = frm.SerieID;
@@ -420,6 +420,34 @@ namespace TraktDesktop
             {
                 FilmZoeken filmToevoegen = new FilmZoeken(DAC, dtsAlles1, inputFilm.Titel, inputFilm.Jaartal);
                 filmToevoegen.ShowDialog();
+            }
+        }
+
+        private void btnArchiefToevoegen_Click(object sender, EventArgs e)
+        {
+            InputText inputText = new InputText();
+
+            if (inputText.DialogResult == DialogResult.OK)
+            {
+                string archief = inputText.Tekst;
+
+                var newArchief = dtsAlles1.Archiefs.NewArchiefsRow();
+
+                newArchief.ID = dtsAlles1.Archiefs.Max(a => a.ID) + 1;
+                newArchief.Naam = archief;
+
+                dtsAlles1.Archiefs.AddArchiefsRow(newArchief);
+                DAC.ArchiefTA.Update(dtsAlles1);
+            }
+        }
+
+        private void btnArchiefVerwijderen_Click(object sender, EventArgs e)
+        {
+            KiesArchief kiesArchief = new KiesArchief(DAC, dtsAlles1);
+            if (kiesArchief.DialogResult == DialogResult.OK)
+            {
+                dtsAlles1.Archiefs.RemoveArchiefsRow(dtsAlles1.Archiefs.FindByID(kiesArchief.ArchiefID));
+                DAC.ArchiefTA.Update(dtsAlles1);
             }
         }
     }

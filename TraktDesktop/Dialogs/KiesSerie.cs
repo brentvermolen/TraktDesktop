@@ -12,28 +12,40 @@ namespace TraktDesktop
 {
     public partial class KiesSerie : Form
     {
+        public DataAccessClass DAC;
+        public dtsAlles dtsAlles1;
+
         public int SerieID = 0;
 
-        public KiesSerie()
+        public KiesSerie(DataAccessClass DAC, dtsAlles dtsAlles)
         {
             InitializeComponent();
+
+            this.DAC = DAC;
+            dtsAlles1 = dtsAlles;
         }
 
         private void KiesSerie_Load(object sender, EventArgs e)
         {
-            dtsSeriesAfleveringenTableAdapters.SeriesTableAdapter adapter = new dtsSeriesAfleveringenTableAdapters.SeriesTableAdapter();
-            adapter.Fill(dtsSeriesAfleveringen1.Series);
-
-            lstSeries.DataSource = adapter.GetData().OrderBy(s => s.Naam).ToList();
+            lstSeries.DataSource = DAC.SeriesTA.GetData().OrderBy(s => s.Naam).ToList();
             lstSeries.DisplayMember = "Naam";
             lstSeries.ValueMember = "ID";
         }
 
         private void btnSelecteer_Click(object sender, EventArgs e)
         {
+            Selecteer();
+        }
 
+        private void lstSeries_DoubleClick(object sender, EventArgs e)
+        {
+            Selecteer();
+        }
+
+        private void Selecteer()
+        {
             SerieID = int.Parse(lstSeries.SelectedValue.ToString());
-            this.Close();
+            this.DialogResult = DialogResult.OK;
         }
     }
 }

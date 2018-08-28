@@ -62,6 +62,18 @@
     <Compile Include="Dialogs\InputFilm.Designer.cs">
       <DependentUpon>InputFilm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\InputText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\InputText.Designer.cs">
+      <DependentUpon>InputText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\KiesArchief.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\KiesArchief.Designer.cs">
+      <DependentUpon>KiesArchief.cs</DependentUpon>
+    </Compile>
     <Compile Include="dtsAlles.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -100,10 +112,10 @@
     <Compile Include="frmTags.Designer.cs">
       <DependentUpon>frmTags.cs</DependentUpon>
     </Compile>
-    <Compile Include="KiesSerie.cs">
+    <Compile Include="Dialogs\KiesSerie.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KiesSerie.Designer.cs">
+    <Compile Include="Dialogs\KiesSerie.Designer.cs">
       <DependentUpon>KiesSerie.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -120,6 +132,12 @@
     <EmbeddedResource Include="Dialogs\InputFilm.resx">
       <DependentUpon>InputFilm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\InputText.resx">
+      <DependentUpon>InputText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\KiesArchief.resx">
+      <DependentUpon>KiesArchief.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FilmToevoegen.resx">
       <DependentUpon>FilmToevoegen.cs</DependentUpon>
     </EmbeddedResource>
@@ -129,7 +147,7 @@
     <EmbeddedResource Include="frmTags.resx">
       <DependentUpon>frmTags.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KiesSerie.resx">
+    <EmbeddedResource Include="Dialogs\KiesSerie.resx">
       <DependentUpon>KiesSerie.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

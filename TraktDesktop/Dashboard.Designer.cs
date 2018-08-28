@@ -39,7 +39,6 @@
             this.btnAfleveringenToevoegen = new System.Windows.Forms.Button();
             this.btnSeriesToevoegen = new System.Windows.Forms.Button();
             this.btnFilmToevoegen = new System.Windows.Forms.Button();
-            this.btnFilmsToevoegen = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnOmzettenMKV = new System.Windows.Forms.Button();
@@ -71,6 +70,7 @@
             this.btnArchiefVerwijderen.TabIndex = 17;
             this.btnArchiefVerwijderen.Text = "Archief Verwijderen";
             this.btnArchiefVerwijderen.UseVisualStyleBackColor = true;
+            this.btnArchiefVerwijderen.Click += new System.EventHandler(this.btnArchiefVerwijderen_Click);
             // 
             // btnBekijkArchief
             // 
@@ -124,6 +124,7 @@
             this.btnArchiefToevoegen.TabIndex = 14;
             this.btnArchiefToevoegen.Text = "Archief Toevoegen";
             this.btnArchiefToevoegen.UseVisualStyleBackColor = true;
+            this.btnArchiefToevoegen.Click += new System.EventHandler(this.btnArchiefToevoegen_Click);
             // 
             // groupBox3
             // 
@@ -156,12 +157,12 @@
             this.btnSeriesToevoegen.Name = "btnSeriesToevoegen";
             this.btnSeriesToevoegen.Size = new System.Drawing.Size(214, 30);
             this.btnSeriesToevoegen.TabIndex = 4;
-            this.btnSeriesToevoegen.Text = "Series Toevoegen";
+            this.btnSeriesToevoegen.Text = "Serie Toevoegen";
             this.btnSeriesToevoegen.UseVisualStyleBackColor = true;
             // 
             // btnFilmToevoegen
             // 
-            this.btnFilmToevoegen.Location = new System.Drawing.Point(22, 65);
+            this.btnFilmToevoegen.Location = new System.Drawing.Point(22, 17);
             this.btnFilmToevoegen.Margin = new System.Windows.Forms.Padding(2);
             this.btnFilmToevoegen.Name = "btnFilmToevoegen";
             this.btnFilmToevoegen.Size = new System.Drawing.Size(214, 30);
@@ -169,16 +170,6 @@
             this.btnFilmToevoegen.Text = "Film Toevoegen";
             this.btnFilmToevoegen.UseVisualStyleBackColor = true;
             this.btnFilmToevoegen.Click += new System.EventHandler(this.btnFilmToevoegen_Click);
-            // 
-            // btnFilmsToevoegen
-            // 
-            this.btnFilmsToevoegen.Location = new System.Drawing.Point(22, 17);
-            this.btnFilmsToevoegen.Margin = new System.Windows.Forms.Padding(2);
-            this.btnFilmsToevoegen.Name = "btnFilmsToevoegen";
-            this.btnFilmsToevoegen.Size = new System.Drawing.Size(214, 30);
-            this.btnFilmsToevoegen.TabIndex = 0;
-            this.btnFilmsToevoegen.Text = "Films Toevoegen";
-            this.btnFilmsToevoegen.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -199,7 +190,6 @@
             this.groupBox1.Controls.Add(this.btnOmzettenMKV);
             this.groupBox1.Controls.Add(this.btnCollectieUpdaten);
             this.groupBox1.Controls.Add(this.btnFilmToevoegen);
-            this.groupBox1.Controls.Add(this.btnFilmsToevoegen);
             this.groupBox1.Location = new System.Drawing.Point(11, 11);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
@@ -333,7 +323,6 @@
         private System.Windows.Forms.Button btnAfleveringenToevoegen;
         private System.Windows.Forms.Button btnSeriesToevoegen;
         private System.Windows.Forms.Button btnFilmToevoegen;
-        private System.Windows.Forms.Button btnFilmsToevoegen;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnAfleveringToevoegen;
