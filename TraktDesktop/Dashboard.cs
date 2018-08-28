@@ -427,7 +427,7 @@ namespace TraktDesktop
         {
             InputText inputText = new InputText();
 
-            if (inputText.DialogResult == DialogResult.OK)
+            if (inputText.ShowDialog() == DialogResult.OK)
             {
                 string archief = inputText.Tekst;
 
@@ -444,10 +444,18 @@ namespace TraktDesktop
         private void btnArchiefVerwijderen_Click(object sender, EventArgs e)
         {
             KiesArchief kiesArchief = new KiesArchief(DAC, dtsAlles1);
-            if (kiesArchief.DialogResult == DialogResult.OK)
+            if (kiesArchief.ShowDialog() == DialogResult.OK)
             {
-                dtsAlles1.Archiefs.RemoveArchiefsRow(dtsAlles1.Archiefs.FindByID(kiesArchief.ArchiefID));
-                DAC.ArchiefTA.Update(dtsAlles1);
+                //TODO: Films en afleveringen op archief ook verwijderen?
+                if (dtsAlles1.FilmArchiefs.Where(a => a.Archief_ID == kiesArchief.ArchiefID).Count() > 0 || 
+                    dtsAlles1.AfleveringArchiefs.Where(a => a.Archief_ID == kiesArchief.ArchiefID).Count() > 0)
+                {
+                    MessageBox.Show("Kan archief niet verwijderen" + Environment.NewLine + "Er zijn nog films en series aanwezig op archief", "Oeps...", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    DAC.ArchiefTA.Delete(kiesArchief.ArchiefID);
+                }
             }
         }
     }
