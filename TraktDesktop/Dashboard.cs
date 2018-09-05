@@ -447,6 +447,7 @@ namespace TraktDesktop
             if (kiesArchief.ShowDialog() == DialogResult.OK)
             {
                 //TODO: Films en afleveringen op archief ook verwijderen?
+                //TODO: Aparte knop met archief leegmaken?
                 if (dtsAlles1.FilmArchiefs.Where(a => a.Archief_ID == kiesArchief.ArchiefID).Count() > 0 || 
                     dtsAlles1.AfleveringArchiefs.Where(a => a.Archief_ID == kiesArchief.ArchiefID).Count() > 0)
                 {
