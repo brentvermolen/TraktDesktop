@@ -321,6 +321,15 @@ namespace TraktDesktop
                     dtsAlles1.Films.AddFilmsRow(film);
                     DAC.FilmsTA.Update(dtsAlles1);
 
+                    var aanvraag = dtsAlles1.Aanvraags.FindByFilmId(film.ID);
+
+                    try
+                    {
+                        dtsAlles1.Aanvraags.RemoveAanvraagsRow(aanvraag);
+                        DAC.AanvragenTA.Update(dtsAlles1);
+                    }
+                    catch (Exception) { }
+
                     //film.Tags = new List<Tag>();
 
                     foreach (var genre in obje.SelectToken("genres"))
