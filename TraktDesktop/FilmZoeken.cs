@@ -325,8 +325,7 @@ namespace TraktDesktop
 
                     try
                     {
-                        dtsAlles1.Aanvraags.RemoveAanvraagsRow(aanvraag);
-                        DAC.AanvragenTA.Update(dtsAlles1);
+                        DAC.AanvragenTA.Delete(aanvraag.FilmId, aanvraag.AangevraagOp, aanvraag.GebruikerId);
                     }
                     catch (Exception) { }
 
