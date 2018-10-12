@@ -163,7 +163,17 @@ namespace TraktDesktop
 
             if (aflevering != null)
             {
-                string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam.Replace(":", " -");
+                string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam
+                    .Replace("\\", ", ")
+                    .Replace("/", ", ")
+                    .Replace(":", " -")
+                    .Replace("*", "^")
+                    .Replace("?", "")
+                    .Replace("\"", "'")
+                    .Replace("<", " ")
+                    .Replace(">", " ")
+                    .Replace("|", ", ");
+
                 string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
 
                 if (File.Exists(fullName) == false)
