@@ -33,7 +33,7 @@ namespace TraktDesktop.Dialogs
                 this.DialogResult = DialogResult.Cancel;
             }
 
-            if (txtTitel.Text.Length > 0 && Jaartal > 1900 && Jaartal <= DateTime.Now.Year)
+            if (txtTitel.Text.Length > 0 /*&& Jaartal > 1900 && Jaartal <= DateTime.Now.Year*/)
             {
                 this.DialogResult = DialogResult.OK;
             }

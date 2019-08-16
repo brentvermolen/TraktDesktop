@@ -45,7 +45,7 @@ namespace TraktDesktop
         private dtsFilmTagsTableAdapters.FilmsTableAdapter FilmsAdapter;
         private dtsFilmTagsTableAdapters.FilmTagsTableAdapter FilmTagsAdapter;
         private dtsFilmTagsTableAdapters.TagsTableAdapter TagsAdapter;*/
-        
+
         private DataAccessClass DAC;
         private dtsAlles dtsAlles1;
 
@@ -65,6 +65,7 @@ namespace TraktDesktop
         private void btnWijzigNamen_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = "Z:\\Series\\!Comic\\";
 
             if (fbd.ShowDialog() != DialogResult.OK)
             {
@@ -173,6 +174,11 @@ namespace TraktDesktop
                     .Replace("<", " ")
                     .Replace(">", " ")
                     .Replace("|", ", ");
+
+                if (bestand.Extension.ToLower().Equals(".srt"))
+                {
+                    newName += ".dut";
+                }
 
                 string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
 
@@ -295,6 +301,8 @@ namespace TraktDesktop
         private void btnOmzettenMKV_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = "D:\\Films\\!Nieuw\\";
+
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 BackgroundWorker worker = new BackgroundWorker();
@@ -425,7 +433,7 @@ namespace TraktDesktop
         private void btnFilmToevoegen_Click(object sender, EventArgs e)
         {
             InputFilm inputFilm = new InputFilm();
-            
+
             if (inputFilm.ShowDialog() == DialogResult.OK)
             {
                 FilmZoeken filmToevoegen = new FilmZoeken(DAC, dtsAlles1, inputFilm.Titel, inputFilm.Jaartal);
@@ -458,7 +466,7 @@ namespace TraktDesktop
             {
                 //TODO: Films en afleveringen op archief ook verwijderen?
                 //TODO: Aparte knop met archief leegmaken?
-                if (dtsAlles1.FilmArchiefs.Where(a => a.Archief_ID == kiesArchief.ArchiefID).Count() > 0 || 
+                if (dtsAlles1.FilmArchiefs.Where(a => a.Archief_ID == kiesArchief.ArchiefID).Count() > 0 ||
                     dtsAlles1.AfleveringArchiefs.Where(a => a.Archief_ID == kiesArchief.ArchiefID).Count() > 0)
                 {
                     MessageBox.Show("Kan archief niet verwijderen" + Environment.NewLine + "Er zijn nog films en series aanwezig op archief", "Oeps...", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -466,6 +474,197 @@ namespace TraktDesktop
                 else
                 {
                     DAC.ArchiefTA.Delete(kiesArchief.ArchiefID);
+                }
+            }
+        }
+
+        private void btnWijzigVoorWDHome_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = "Z:\\Plex\\Shared TV Shows\\Arrow\\";
+
+            if (fbd.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            DirectoryInfo dirFolder = new DirectoryInfo(fbd.SelectedPath);
+
+            BackgroundWorker worker = new BackgroundWorker();
+
+            grpLoading.Visible = true;
+            worker.WorkerReportsProgress = true;
+
+            worker.DoWork += new DoWorkEventHandler((obj, w) =>
+            {
+                worker.ReportProgress(0, "Gegevens inladen");
+
+                /*if (AfleveringenAdpater == null)
+                {
+                    AfleveringenAdpater = new dtsSeriesAfleveringenTableAdapters.AfleveringsTableAdapter();
+                    AfleveringenAdpater.Fill(dtsSeriesAfleveringen1.Afleverings);
+                }*/
+
+                worker.ReportProgress(0, "Serie kiezen");
+
+                KiesSerie frm = new KiesSerie(DAC, dtsAlles1);
+                frm.ShowDialog();
+
+                int serieId = frm.SerieID;
+
+                worker.ReportProgress(0, "Afleveringen zoeken");
+
+                var afleveringen = DAC.AfleveringenTA.GetData().Where(a => a.SerieID == serieId);
+
+                worker.ReportProgress(0, "Bestanden wijzigen");
+
+                SearchInFolderForHome(dirFolder, serieId, afleveringen, worker);
+            });
+
+            worker.ProgressChanged += new ProgressChangedEventHandler((obj, p) =>
+            {
+                lblLoading.Text = p.UserState.ToString();
+            });
+
+            worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler((obj, r) =>
+            {
+                grpLoading.Visible = false;
+            });
+
+            worker.RunWorkerAsync();
+        }
+
+
+
+        private void SearchInFolderForHome(DirectoryInfo dirFolder, int serieId, EnumerableRowCollection<dtsAlles.AfleveringsRow> afleveringen, BackgroundWorker worker)
+        {
+            foreach (var folder in dirFolder.GetDirectories())
+            {
+                SearchInFolderForHome(folder, serieId, afleveringen, worker);
+            }
+
+            string regex = @"Afl. ([0-9]{0,2}) - ([\d\D\s\W\S]+)[.]";
+            string regex1 = "[sS]{0,1}([0-9]{1,2})[eExX]{1}([0-9]{1,2})";
+            string regex2 = "([0-9]{1})([0-9]{2})";
+            string regex3 = "[sS]{1}([0-9]{1,2})[eExX]{1}[ ][(]([0-9]{1,2})[)]";
+
+            foreach (FileInfo bestand in dirFolder.GetFiles())
+            {
+                worker.ReportProgress(0, "Bestanden wijzigen\n" + dirFolder.Name + " - " + bestand.Name);
+
+                if (Regex.IsMatch(bestand.Name, regex1))
+                {
+                    Match match = Regex.Match(bestand.Name, regex1);
+
+                    MoveBestandForHome(bestand, match, serieId);
+                }
+                else if (Regex.IsMatch(bestand.Name, regex2))
+                {
+                    Match match = Regex.Match(bestand.Name, regex2);
+
+                    MoveBestandForHome(bestand, match, serieId);
+                }
+                else if (Regex.IsMatch(bestand.Name, regex3))
+                {
+                    Match match = Regex.Match(bestand.Name, regex3);
+
+                    MoveBestandForHome(bestand, match, serieId);
+                }
+                else if (Regex.IsMatch(bestand.Name, regex))
+                {
+                    Match match = Regex.Match(bestand.Name, regex);
+
+                    MoveBestandForHome(afleveringen, bestand, match);
+                }
+            }
+        }
+
+        private void MoveBestandForHome(FileInfo bestand, Match match, int serieId)
+        {
+            int seizoen = int.Parse(match.Groups[1].Value);
+            int afl = int.Parse(match.Groups[2].Value);
+
+            var serie = DAC.SeriesTA.GetData().FirstOrDefault(s => s.ID == serieId);
+
+            string newName = serie.Naam.Replace(": ", " ") + " - s" + seizoen.ToString("D2") + "e" + afl.ToString("D2");
+
+            if (bestand.Extension.ToLower().Equals(".srt"))
+            {
+                newName += ".dut";
+            }
+
+            string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
+
+            if (File.Exists(fullName) == false)
+            {
+                bestand.MoveTo(fullName);
+            }
+        }
+
+        private void MoveBestandForHome(EnumerableRowCollection<dtsAlles.AfleveringsRow> afleveringen, FileInfo bestand, Match match)
+        {
+            string name = match.Groups[2].Value.Replace(".dut", "");
+
+            var aflevering = afleveringen.FirstOrDefault(a => a.Naam.Equals(name));
+
+            if (aflevering != null)
+            {
+                var serie = DAC.SeriesTA.GetData().FirstOrDefault(s => s.ID == aflevering.SerieID);
+                //string newName = "Afl. " + aflevering.Nummer + " - " + aflevering.Naam
+                //    .Replace("\\", ", ")
+                //    .Replace("/", ", ")
+                //    .Replace(":", " -")
+                //    .Replace("*", "^")
+                //    .Replace("?", "")
+                //    .Replace("\"", "'")
+                //    .Replace("<", " ")
+                //    .Replace(">", " ")
+                //    .Replace("|", ", ");
+                string newName = serie.Naam.Replace(": ", " ") + " - s" + aflevering.Seizoen.ToString("D2") + "e" + aflevering.Nummer.ToString("D2");
+
+                if (bestand.Extension.ToLower().Equals(".srt"))
+                {
+                    newName += ".dut";
+                }
+
+                string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
+
+                if (File.Exists(fullName) == false)
+                {
+                    bestand.MoveTo(fullName);
+                }
+            }
+            else
+            {
+                var aflv = afleveringen.Where(a => a.Nummer == int.Parse(match.Groups[1].Value));
+                var serie = DAC.SeriesTA.GetData().FirstOrDefault(s => s.ID == aflv.First().SerieID);
+
+                foreach (var afl in aflv)
+                {
+                    string naam = afl.Naam
+                    .Replace("\\", ", ")
+                    .Replace("/", ", ")
+                    .Replace(":", " -")
+                    .Replace("*", "^")
+                    .Replace("?", "")
+                    .Replace("\"", "'")
+                    .Replace("<", " ")
+                    .Replace(">", " ")
+                    .Replace("|", ", ");
+
+                    if (naam.Equals(name))
+                    {
+                        string newName = serie.Naam.Replace(": ", " ") + " - s" + afl.Seizoen.ToString("D2") + "e" + afl.Nummer.ToString("D2");
+
+                        string fullName = bestand.FullName.Replace(bestand.Name, newName + bestand.Extension);
+
+                        if (File.Exists(fullName) == false)
+                        {
+                            bestand.MoveTo(fullName);
+                        }
+
+                        break;
+                    }
                 }
             }
         }
